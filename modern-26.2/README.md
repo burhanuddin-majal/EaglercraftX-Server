@@ -30,6 +30,10 @@ Then run:
 - Linux/macOS: `sh modern-26.2/start-server.sh`
 - Windows: `modern-26.2\start-server.bat`
 
+## Automated checks
+
+GitHub Actions validates the Python syntax, manifest structure and SHA-256 formatting, and shell launcher syntax on pushes to this migration branch. Passing these checks does **not** prove that the downloaded server boots or that a browser client can connect; those still require an end-to-end test.
+
 ## Important limitations
 
 - This is an initial setup path, **not a claim that the server has been tested end-to-end**.
