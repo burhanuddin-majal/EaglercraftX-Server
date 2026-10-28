@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import urllib.request
@@ -27,7 +28,6 @@ def java_major() -> int | None:
         )
     except (OSError, subprocess.CalledProcessError):
         return None
-    import re
     match = re.search(r'version\s+"(?:1\.)?(\d+)', output)
     return int(match.group(1)) if match else None
 
@@ -84,13 +84,14 @@ def main() -> int:
     SERVER.mkdir(parents=True, exist_ok=True)
     PLUGINS.mkdir(parents=True, exist_ok=True)
 
-    for component in ("paper", "eaglerXPaper"):
-        item = MANIFEST[component]
-        download_verified(
-            item["url"], SERVER / item["fileName"], item["sha256"]
-        )
+    paper_info = MANIFEST["paper"]
+    paper = SERVER / paper_info["fileName"]
+    download_verified(paper_info["url"], paper, paper_info["sha256"])
 
-    paper = SERVER / MANIFEST["paper"]["fileName"]
+    plugin_info = MANIFEST["eaglerXPaper"]
+    plugin = PLUGINS / plugin_info["fileName"]
+    download_verified(plugin_info["url"], plugin, plugin_info["sha256"])
+
     stable = SERVER / "paper.jar"
     if not stable.exists():
         # A copy avoids symlink differences across Windows/Linux.
